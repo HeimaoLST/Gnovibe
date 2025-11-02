@@ -4,12 +4,13 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"sync"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
 )
 
-func Watch(ctx context.Context, path *string) {
+func Watch(ctx context.Context, path *string, wg *sync.WaitGroup) {
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		log.Fatal(err)
@@ -46,7 +47,7 @@ func Watch(ctx context.Context, path *string) {
 			}
 		case <-ctx.Done():
 			{
-
+				wg.Done()
 				return
 			}
 		}
