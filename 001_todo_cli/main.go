@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -11,14 +12,16 @@ const (
 )
 
 func main() {
-	repo := NewtodoJson("todo.json")
+	repo := NewTodoJson("todo.json")
 	todouc := NewtodoUsecase(&repo)
 	if len(os.Args) < 2 {
 		todouc.todoHelp()
 		return
 	}
 	if os.Args[1] != OPERATION_LIST && len(os.Args) != 3 {
-
+		fmt.Println("Error: Missing required argument")
+		fmt.Println("Usage:")
+		todouc.todoHelp()
 		return
 	}
 	switch os.Args[1] {

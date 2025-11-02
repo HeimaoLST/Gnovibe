@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"os"
 	"time"
 )
@@ -21,22 +20,22 @@ type todoItem struct {
 	ModifyTime time.Time
 	Status     Status
 }
-type todoRepo interface {
+type TodoRepo interface {
 	Save(string) error
 	Done(int) error
 	List() ([]todoItem, error)
 }
 
-type todoJson struct {
+type TodoJson struct {
 	file string
 }
 
-func NewtodoJson(str string) todoJson {
-	return todoJson{
+func NewTodoJson(str string) TodoJson {
+	return TodoJson{
 		file: str,
 	}
 }
-func (uc *todoJson) Save(str string) error {
+func (uc *TodoJson) Save(str string) error {
 
 	data, err := os.ReadFile(uc.file)
 	if err != nil {
@@ -45,8 +44,12 @@ func (uc *todoJson) Save(str string) error {
 	var items []todoItem
 
 	if err := json.Unmarshal(data, &items); err != nil {
-		log.Fatal("Json unmarshal error: ", err.Error())
-		return err
+		//in fact the log.Fatal will casue the exit
+		//the express after it will never execute
+		// log.Fatal("Json unmarshal error: ", err.Error())
+
+		return fmt.Errorf("JSON unmarshal error: %w", err)
+
 	}
 	items = append(items, todoItem{
 		Name:       str,
@@ -63,7 +66,7 @@ func (uc *todoJson) Save(str string) error {
 
 }
 
-func (uc *todoJson) Done(index int) error {
+func (uc *TodoJson) Done(index int) error {
 	if index < 0 {
 		return fmt.Errorf("the index is invalid")
 	}
@@ -97,7 +100,7 @@ func (uc *todoJson) Done(index int) error {
 	return os.WriteFile(uc.file, data, 0644)
 
 }
-func (uc *todoJson) List() ([]todoItem, error) {
+func (uc *TodoJson) List() ([]todoItem, error) {
 
 	data, err := os.ReadFile(uc.file)
 

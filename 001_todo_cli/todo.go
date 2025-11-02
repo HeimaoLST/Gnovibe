@@ -5,21 +5,25 @@ import (
 	"strconv"
 )
 
-type todoUsecase struct {
-	repo todoRepo
+type TodoUsecase struct {
+	repo TodoRepo
 }
 
-func NewtodoUsecase(repo todoRepo) *todoUsecase {
-	return &todoUsecase{
+func NewtodoUsecase(repo TodoRepo) *TodoUsecase {
+	return &TodoUsecase{
 		repo: repo,
 	}
 }
 
-func (uc *todoUsecase) todoHelp() {
+func (uc *TodoUsecase) todoHelp() {
+	fmt.Println("Usage:")
 
+	fmt.Println("./todo add string \n eg. ./todo add helloworld\n add an entry to your todo list")
+	fmt.Println("./todo list\n list all todo entries you have input")
+	fmt.Println("./todo done index\n eg. ./todo done 1\n to mark the entry has been done")
 }
 
-func (uc *todoUsecase) todoAdd(something string) {
+func (uc *TodoUsecase) todoAdd(something string) {
 	if something == "" {
 		fmt.Println("you should input the valid string")
 		return
@@ -33,7 +37,7 @@ func (uc *todoUsecase) todoAdd(something string) {
 
 }
 
-func (uc *todoUsecase) todoDone(index string) {
+func (uc *TodoUsecase) todoDone(index string) {
 	num, err := strconv.Atoi(index)
 	if err != nil {
 		fmt.Println("Atoi Error: ", err.Error())
@@ -48,7 +52,7 @@ func (uc *todoUsecase) todoDone(index string) {
 
 }
 
-func (uc *todoUsecase) todoList() {
+func (uc *TodoUsecase) todoList() {
 	items, err := uc.repo.List()
 
 	if err != nil {
